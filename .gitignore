@@ -1,3 +1,5 @@
-./.idea
+# JetBrains IDE
+.idea/
+
 **/results/*.cvs
 out
