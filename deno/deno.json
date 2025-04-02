@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "build": "cp -r ../shared src/ && docker build --tag benchmark:deno .",
+    "run": "echo 1 | bash run.sh",
+    "run:multiple:times":  "echo 10 | bash run.sh",
+    "build:and:run": "deno task build && deno task run",
+    "test": "echo \"$PWD\" "
+  }
+}

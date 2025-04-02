@@ -1,0 +1,69 @@
+- hosts: target_host
+  gather_facts: false
+  become: true
+  vars:
+    NUMBER_OF_LAUNCHES: 1000
+  tasks:
+    - name: Setup docker
+      ansible.builtin.include_role:
+        name: setup_docker
+
+    - name: Установка pip для Debian/Ubuntu
+      apt:
+        name: python3-pip
+        state: present
+        update_cache: true
+
+    - name: Установка библиотеки requests для Python
+      pip:
+        name: requests
+        state: present
+
+    - name: Copy code to remote
+      ansible.builtin.copy:
+        src: "../{{ item }}"
+        dest: "/srv/"
+        remote_src: false
+      loop:
+        - node
+        - deno
+        - bun
+        - shared
+
+    - name: build images
+      include_tasks: "build_images.tasks.yml"
+      loop: 
+        - node
+        - deno
+        - bun
+      loop_control:
+        loop_var: RUNTIME_ENVIROMENT_NAME
+
+    - name: run benchmarks
+      include_tasks: "run_containers.tasks.yml"
+      loop: 
+        - { RUNTIME_ENVIROMENT_NAME: node, FILEPATH: src/shared/isPrime.bench.js }
+        - { RUNTIME_ENVIROMENT_NAME: deno, FILEPATH: src/shared/isPrime.bench.js } 
+        - { RUNTIME_ENVIROMENT_NAME: bun, FILEPATH: src/shared/isPrime.bench.js } 
+
+        - { RUNTIME_ENVIROMENT_NAME: node, FILEPATH: src/shared/quickSort.bench.js }
+        - { RUNTIME_ENVIROMENT_NAME: deno, FILEPATH: src/shared/quickSort.bench.js } 
+        - { RUNTIME_ENVIROMENT_NAME: bun, FILEPATH: src/shared/quickSort.bench.js } 
+
+        - { RUNTIME_ENVIROMENT_NAME: node, FILEPATH: src/shared/assign.bench.js }
+        - { RUNTIME_ENVIROMENT_NAME: deno, FILEPATH: src/shared/assign.bench.js } 
+        - { RUNTIME_ENVIROMENT_NAME: bun, FILEPATH: src/shared/assign.bench.js }
+
+        - { RUNTIME_ENVIROMENT_NAME: node, FILEPATH: src/shared/asyncArray.bench.js }
+        - { RUNTIME_ENVIROMENT_NAME: deno, FILEPATH: src/shared/asyncArray.bench.js } 
+        - { RUNTIME_ENVIROMENT_NAME: bun, FILEPATH: src/shared/asyncArray.bench.js }
+
+        - { RUNTIME_ENVIROMENT_NAME: node, FILEPATH: src/shared/destructurization.bench.js }
+        - { RUNTIME_ENVIROMENT_NAME: deno, FILEPATH: src/shared/destructurization.bench.js } 
+        - { RUNTIME_ENVIROMENT_NAME: bun, FILEPATH: src/shared/destructurization.bench.js }
+
+        - { RUNTIME_ENVIROMENT_NAME: node, FILEPATH: src/shared/jsonStringifyAndParse.bench.js }
+        - { RUNTIME_ENVIROMENT_NAME: deno, FILEPATH: src/shared/jsonStringifyAndParse.bench.js } 
+        - { RUNTIME_ENVIROMENT_NAME: bun, FILEPATH: src/shared/jsonStringifyAndParse.bench.js }
+      loop_control:
+        loop_var: params

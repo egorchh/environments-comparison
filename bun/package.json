@@ -1,0 +1,14 @@
+{
+  "name": "bun",
+  "type": "module",
+  "scripts": {
+    "build": "cp -r ../shared src/ && docker build --tag benchmark:bun .",
+    "run": "echo 1 | bash run.sh",
+    "run:multiple:times":  "echo 10 | bash run.sh",
+    "build:and:run": "npm run build && npm run run",
+    "test": "echo \"$PWD\" "
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

@@ -1,0 +1,14 @@
+- name: Prepare shared
+  copy:
+    src: /srv/shared
+    dest: "/srv/{{ RUNTIME_ENVIROMENT_NAME }}/src/"
+    remote_src: true
+
+- name: Build an image
+  community.docker.docker_image:
+    build:
+      path: "/srv/{{ RUNTIME_ENVIROMENT_NAME }}"
+    name: benchmark
+    tag: "{{ RUNTIME_ENVIROMENT_NAME }}"
+    source: build
+    

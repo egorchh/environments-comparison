@@ -1,0 +1,17 @@
+---
+# tasks file for setup_docker
+- name: Copy debs to remote host
+  copy:
+    src: deb
+    dest: /tmp/
+
+- name: Install debs
+  apt:
+    deb: "/tmp/deb/{{ item }}"
+    state: present
+  loop:
+    - containerd.io_1.6.28-1_amd64.deb
+    - docker-buildx-plugin_0.12.1-1~ubuntu.22.04~jammy_amd64.deb
+    - docker-ce-cli_24.0.9-1~ubuntu.22.04~jammy_amd64.deb
+    - docker-ce_24.0.9-1~ubuntu.22.04~jammy_amd64.deb
+    - docker-compose-plugin_2.3.3~ubuntu-jammy_amd64.deb

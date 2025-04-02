@@ -1,0 +1,38 @@
+- hosts: main
+  gather_facts: false
+  become: true
+  vars_files: ./vars.yml 
+  tasks:
+    - name: Setup docker
+      ansible.builtin.include_role:
+        name: setup_docker
+
+    - name: Copy node
+      copy:
+        src: ../node
+        dest: /var/
+
+    - name: Create directory
+      file:
+        path: /srv/results
+        state: directory
+
+    - name: Create directory
+      file:
+        path: /srv/node/results
+        state: directory
+
+    - name: Build an image
+      community.docker.docker_image:
+        build:
+          path: /var/node
+        name: benchmark
+        tag: node
+        source: build
+
+    - name: Start a container with a command
+      community.docker.docker_container:
+        name: benchmark
+        image: benchmark:node
+        volumes:
+          - /srv/node/results:/app/node/results

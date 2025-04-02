@@ -1,0 +1,15 @@
+- hosts: localhost
+  gather_facts: false
+  become: false
+  vars:
+    FILEPATH: src/shared/quickSort.bench.js
+    NUMBER_OF_LAUNCHES: 3
+  tasks:
+    - name: play
+      include_tasks: "build_and_run.tasks.yml"
+      loop: 
+        - node
+        - deno
+        - bun
+      loop_control:
+        loop_var: RUNTIME_ENVIROMENT_NAME

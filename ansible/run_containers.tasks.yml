@@ -1,0 +1,9 @@
+- name: Run container
+  community.docker.docker_container:
+    name: "benchmark-{{ params.RUNTIME_ENVIROMENT_NAME }}"
+    image: "benchmark:{{ params.RUNTIME_ENVIROMENT_NAME }}"
+    env:
+      FILEPATH: "{{ params.FILEPATH }}"
+    volumes:
+      - "/srv/{{ params.RUNTIME_ENVIROMENT_NAME }}:/app"
+  loop: "{{ query('sequence', 'start=1 end={{ NUMBER_OF_LAUNCHES }}') }}"
