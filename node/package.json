@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "cp -r ../shared src/ && docker build --tag benchmark:node .",
+    "build": "rm -rf src && cp -r ../shared src/ && docker build --tag benchmark:node .",
     "run": "echo 1 | bash run.sh",
-    "run:multiple:times":  "echo 10 | bash run.sh",
+    "run:multiple:times":  "echo \"Введите количество запусков: \" && read -p \"\" count && echo $count | bash run.sh",
     "build:and:run": "npm run build && npm run run",
     "test": "echo \"$PWD\" "
   },

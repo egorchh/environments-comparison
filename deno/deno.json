@@ -1,8 +1,8 @@
 {
   "tasks": {
-    "build": "cp -r ../shared src/ && docker build --tag benchmark:deno .",
+    "build": "rm -rf src && cp -r ../shared src/ && docker build --tag benchmark:deno .",
     "run": "echo 1 | bash run.sh",
-    "run:multiple:times":  "echo 10 | bash run.sh",
+    "run:multiple:times":  "echo \"Введите количество запусков: \" && read -p \"\" count && echo $count | bash run.sh",
     "build:and:run": "deno task build && deno task run",
     "test": "echo \"$PWD\" "
   }

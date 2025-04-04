@@ -1,4 +1,4 @@
-import { appendFile, mkdir } from 'fs/promises';
+import { appendFile, mkdir } from 'node:fs/promises';
 
 export async function bench(func, ...args) {
   try {
