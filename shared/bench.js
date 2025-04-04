@@ -1,18 +1,27 @@
-"use strict"
-import { appendFile } from 'node:fs'
+import { appendFile, mkdir } from 'fs/promises';
 
-/**
- * 
- * @param {function} func 
- * @param {any} args 
- */
 export async function bench(func, ...args) {
-    performance.mark('start')
-    await func(...args)
-    performance.mark('end')
-    const measure = performance.measure('Measurement', 'start', 'end')
-    appendFile(`results/${func.name}.csv`, measure.duration.toString() + '\r\n', function (err) {
-        if (err) throw err;
-        console.log('Saved!');
-    });
+  try {
+    const isAsync = func.constructor.name === 'AsyncFunction';
+
+    performance.mark('start');
+
+    if (isAsync) {
+      await func(...args);
+    } else {
+      func(...args);
+    }
+
+    performance.mark('end');
+
+    const measure = performance.measure('Measurement', 'start', 'end');
+
+    await mkdir('results', { recursive: true });
+
+    await appendFile(`results/${func.name}.csv`, measure.duration.toString() + '\r\n');
+
+    console.log(`Результат сохранён: results/${func.name}.csv`);
+  } catch (error) {
+    console.error('Ошибка при выполнении бенчмарка:', error);
+  }
 }
