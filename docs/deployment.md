@@ -42,21 +42,20 @@ npm run build:and:run # Создание образа и запуск бенчм
 
 ```bash
 cd deno
-# Создание Docker-образа вручную
-docker build --tag benchmark:deno .
-# Запуск бенчмарка
-echo 1 | bash run.sh  # Запуск один раз
-echo 10 | bash run.sh # Запуск 10 раз
+deno task build               # Создание Docker-образа
+deno task run                 # Запуск бенчмарка один раз
+deno task run:multiple:times  # Запуск бенчмарка несколько раз
+deno task build:and:run       # Создание образа и запуск бенчмарка
 ```
 
 #### Bun
 
 ```bash
 cd bun
-npm run build         # Создание Docker-образа
-npm run run           # Запуск бенчмарка один раз
+npm run build               # Создание Docker-образа
+npm run run                 # Запуск бенчмарка один раз
 npm run run:multiple:times  # Запуск бенчмарка несколько раз
-npm run build:and:run # Создание образа и запуск бенчмарка
+npm run build:and:run       # Создание образа и запуск бенчмарка
 ```
 
 ### Изменение тестируемого сценария
@@ -150,20 +149,3 @@ scp -r username@remote_ip:/srv/*/results/ ./results_from_server/
 ## Диаграмма процесса
 
 ![experiment-process-diagram](./assets/process-diagram.png)
-
-## Устранение неполадок
-
-### Проблемы с Docker
-
-- Убедитесь, что служба Docker запущена: `systemctl status docker`
-- Проверьте наличие прав для запуска Docker: `docker ps`
-
-### Проблемы с Ansible
-
-- Проверьте подключение к удаленному серверу: `ansible -i hosts.ini target_host -m ping`
-- Проверьте права sudo на удаленном сервере: `ansible -i hosts.ini target_host -m shell -a "sudo -n true" --become`
-
-### Проблемы с запуском бенчмарков
-
-- Проверьте логи контейнера: `docker logs benchmark-{среда}`
-- Убедитесь, что директория `results` существует и доступна для записи
